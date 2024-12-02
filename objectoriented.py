@@ -20,7 +20,7 @@ class FaceFinder:
 
 		# Detect faces
 		#   detectMultScale returns an 2d ndarray
-		faces = self.face_cascade.detectMultiScale(gray, MinNeighbors = 9)
+		faces = self.face_cascade.detectMultiScale(gray, minNeighbors = 9)
 		print('detected face(s) at:', faces)
 
 		# Draw rectangle around the faces
@@ -32,14 +32,40 @@ class FaceFinder:
 		for (x, y, w, h) in faces:
 			if w > bw:  # is current face bigger than biggest so far
 				bx,by,bw,bh = x,y,w,h
-  		cv2.rectangle(frame, (bx, by), (bx+bw, by+bh), (0, 255, 255), 3)
-  		return ((bx+bw//2), by+bh//2))
+		cv2.rectangle(frame, (bx, by), (bx+bw, by+bh), (0, 255, 255), 3)
+		return (bx+bw/2), (by+bh/2)
   		
 
 #--------------------------------------------
 #main
 #
-print('starting oo virtual3d')
+# not sure if this is in right spot print('starting oo virtual3d')
 
 ff = FaceFinder()
-print('virtual3d complete')
+cap = cv2.VideoCapture(cv2.CAP_ANY)
+if not cap.isOpened():
+	print("Couldn't open cam")
+	exit()
+
+
+
+
+
+while True:
+	retval, frame = cap.read()
+	if retval == False:
+		print("camera error!")
+
+	ff.find_face(frame)
+	cv2.imshow('q to quit',frame)
+
+	if cv2.waitKey(30) == ord('q'):
+		break
+
+
+pause = input('press enter to end')
+#destroy cam
+cap.release()
+cv2.destroyAllWindows()
+#print('virtual3d complete')
+print('starting oo virtual3D')
