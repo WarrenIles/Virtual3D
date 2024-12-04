@@ -39,32 +39,32 @@ class FaceFinder:
 class Stage:
     """Initialized with display size, draws background grid based on position"""
     def __init__(self):
-     self.disp_h = 0
-     self.disp_w = 0
-     self.cam_h = 720
-     self.cam_w = 1280
-     self.save_x = 960
+      self.disp_h = 0
+      self.disp_w = 0
+      self.cam_h = 720
+      self.cam_w = 1280
+      self.save_x = 960
 
-     def draw_target_xy(self, img, pos, size):
+    def draw_target_xy(self, img, pos, size):
       cv2.circle(img, pos, size, (0,0,255), -1)
       cv2.circle(img,pos,int(size*.8), (255,255,255), -1)
       cv2.circle(img, pos,int(size*.6), (0,0,255), -1)
       cv2.circle(img, pos,int(size*.4), (255,255,255), -1)
       cv2.circle(img, pos,int(size*.2), (0,0,255), -1)
 
-
-     def draw_targetz(self,pos,facexy):
+     # drawing the z position of each target
+    def draw_targetz(self,pos,facexy):
      	tx,ty,tz = pos
      	cv2.circle(img, (ball0x, ball0y), 50, (255,0,0), -1)
      	cv2.line(img, (960+ int((600-960)*.3**2), 540 ),(ball0x, ball0y),(255,0,0),3)
 
-
-     def update(self, facexy):
+     # updates screen targets based on user position
+    def update(self, facexy):
      	x,y = facexy
      	e = .9 # smoothing constant
 
-     	x = e * x + (1-e)*self.save_x
-     	self.save_x = save_x
+     	x = e * x + (1-e) * self.save_x
+     	self.save_x = x
      	img = np.zeros([1080,1920,3])
      	decay = .3
      	sx = sy = 0
@@ -100,30 +100,43 @@ class Stage:
 # not sure if this is in right spot print('starting oo virtual3d')
 
 ff = FaceFinder()
+stage = Stage()
+img = np.zeros([1080,1920,3])
+cv2.imshow('Warrens Game', img)
 cap = cv2.VideoCapture(cv2.CAP_ANY)
 if not cap.isOpened():
 	print("Couldn't open cam")
 	exit()
 
 
-
+moved = False
 
 
 while True:
-	retval, frame = cap.read()
-	if retval == False:
-		print("camera error!")
+	#This reads the frame
+	ret, frame = cap.read()
+	# if frame is read correctly ret is true
+	if not ret:
+		print("error reading frame. Exiting...")
 
-	ff.find_face(frame)
+	facexy = ff.find_face(frame)
+	frame_small = cv2.resize(frame, (frame.shape[1]//4, frame.shape[0]//4),
+		interpolation = cv2.INTER_LINEAR)
+
 	cv2.imshow('q to quit',frame)
+	if not moved:
+		cv2.moveWindow('q to quit', 1080,0)
+		moved = True
+	if facexy is not None:
+		img = stage.update(facexy)
 
+		# Stop if q is pressed
 	if cv2.waitKey(30) == ord('q'):
 		break
 
 
-pause = input('press enter to end')
-#destroy cam
+#pause = input('press enter to end')
+#Release the VideoCapture object
 cap.release()
 cv2.destroyAllWindows()
 #print('virtual3d complete')
-print('starting oo virtual3D')
