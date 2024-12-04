@@ -33,7 +33,48 @@ class FaceFinder:
 			if w > bw:  # is current face bigger than biggest so far
 				bx,by,bw,bh = x,y,w,h
 		cv2.rectangle(frame, (bx, by), (bx+bw, by+bh), (0, 255, 255), 3)
-		return (bx+bw/2), (by+bh/2)
+		return (bx+bw//2), (by+bh//2)
+
+
+class Stage:
+    """Initialized with display size, draws background grid based on position"""
+    def __init__(self):
+     self.disp_h = 0
+     self.disp_w = 0
+     self.cam_h = 720
+     self.cam_w = 1280
+     self.save_x = 960
+
+     def draw_target_xy(self, img, pos, size):
+      cv2.circle(img, pos, size, (0,0,255), -1)
+      cv2.circle(img,pos,int(size*.8), (255,255,255), -1)
+      cv2.circle(img, pos,int(size*.6), (0,0,255), -1)
+      cv2.circle(img, pos,int(size*.4), (255,255,255), -1)
+      cv2.circle(img, pos,int(size*.2), (0,0,255), -1)
+
+
+     def draw_targetz(self,pos,facexy):
+     	tx,ty,tz = pos
+     	cv2.circle(img, (ball0x, ball0y), 50, (255,0,0), -1)
+     	cv2.line(img, (960+ int((600-960)*.3**2), 540 ),(ball0x, ball0y),(255,0,0),3)
+
+
+     def update(self, facexy):
+     	x,y = facexy
+     	e = .9 # smoothing constant
+
+     	x = e * x + (1-e)*self.save_x
+     	self.save_x = save_x
+     	img = np.zeros([1080,1920,3])
+     	decay = .3
+     	sx = sy = 0
+     	dx = int ((x - self.cam_w/2)*2)
+     	for i in range(1,7):
+     		sx = sx + int((960-sx)*decay)
+     		sy - sy + int((540-sy)*decay)
+     		dx = int(dx * decay)
+     		#print(sx, sy)
+     		cv2.rectangle(img, (sx+dx,sy), (1920-sx+dx, 1080-sy),(255,255,255),1 )
   		
 
 #--------------------------------------------
