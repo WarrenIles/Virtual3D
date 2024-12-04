@@ -81,7 +81,17 @@ class Stage:
 
      		cv2.line(img,
      				(960+ int ((600-960)*.3**2), 540 ), (ball0x, ball0y), (255,0,0),3)
-     		self.draw_target_xy(img,(ball1x, ball1y), 25)
+     		self.draw_target_xy(img,(ball0x, ball0y), 35)
+
+     		ball1x = 1000+ int((x - self.cam_w/2)*2*.2)
+     		ball1y = 440
+
+     		cv2.line(img,
+     				(960+ int((1200-960)*.3**2), 540 - int((540-340)*.3**2)),
+     				(ball1x, ball1y),
+     				(255,0,0),3)
+     		self.draw_target_xy(img, (ball1x , ball1y), 25)
+
 
      		ball2x = 1100+ int((x - self.cam_w/2)*2*.9)
      		ball2y = 650
