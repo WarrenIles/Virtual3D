@@ -75,6 +75,23 @@ class Stage:
      		dx = int(dx * decay)
      		#print(sx, sy)
      		cv2.rectangle(img, (sx+dx,sy), (1920-sx+dx, 1080-sy),(255,255,255),1 )
+
+     		ball0x = 600+ int((x - self.cam_w/2)*2*.6)
+     		ball0y = 540
+
+     		cv2.line(img,
+     				(960+ int ((600-960)*.3**2), 540 ), (ball0x, ball0y), (255,0,0),3)
+     		self.draw_target_xy(img,(ball1x, ball1y), 25)
+
+     		ball2x = 1100+ int((x - self.cam_w/2)*2*.9)
+     		ball2y = 650
+
+     		cv2.line(img,
+     				(960+ int ((1100-960)*.3**2), 540 - int((540-650)*.3**2)),
+     				(ball2x, ball2y), (255,0,0),3)
+     		self.draw_target_xy(img, (ball2x , ball2y), 50)
+
+     		cv2.imshow('Warrens Game', img)
   		
 
 #--------------------------------------------
